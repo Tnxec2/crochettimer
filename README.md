@@ -4,6 +4,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## App description
 
+![icon](./public/favicon-32x32.png)
+
+App is available here:
+
+https://tnxec2.github.io/crochettimer/
+
 With this app you can count rows or stiches in your crochet / knitting projects. You can track multiple parts on one project, or you can work your project as single part project. 
 
 You have two counters for every part:
