@@ -15,7 +15,7 @@ export const EditProjectDialog : FC<Props> = ({project, handleUpdate, onDeletePr
     return (<>
         <form onSubmit={(e) => {handleUpdate(project, e)}}>
         <input type="hidden" className="hidden" name="id"  disabled value={project.id} />
-        <input type="text" name="name" placeholder="Name" defaultValue={project.name}/>
+        <input type="text" name="name" placeholder="Name" defaultValue={project.name}  autoComplete="off"/>
         <Checkbox name="hasMultipleParts" title="has multiple parts" defaultChecked={project.hasMultipleParts}/>
         <Checkbox name="hasTimer" title="has timer" defaultChecked={project.hasTimer}/>
         <Checkbox name="hasSecondCounter" title="has second counter" defaultChecked={project.hasSecondCounter} />

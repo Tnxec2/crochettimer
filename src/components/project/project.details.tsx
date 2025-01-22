@@ -1,9 +1,9 @@
 import { FC, ReactNode, useState } from "react";
 import { CrochetPart, CrochetProject } from "../../service/db";
-import { Counter } from "./counter";
+import { Counter } from "../ui/counter";
 import { PartCard } from "./part.card";
 import Modal from "../modal/modal";
-import { InputDialog } from "./inputNameDialog";
+import { InputDialog } from "../ui/inputNameDialog";
 import { millisecondsToHuman } from "../../service/time";
 
 

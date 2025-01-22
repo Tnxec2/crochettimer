@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { CrochetPart } from "../../service/db";
-import { Counter } from "./counter";
+import { Counter } from "../ui/counter";
 
 
 type Props = {

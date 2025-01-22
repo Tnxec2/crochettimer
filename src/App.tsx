@@ -1,27 +1,29 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import "./App.css";
 import {
-  CrochetPart,
   CrochetProject,
   Stores,
   getStoreData,
   initDB,
   updateData,
 } from "./service/db";
-import { ErrorMessage } from "./components/project/error";
+import { ErrorMessage } from "./components/ui/error";
 import { ProjectList } from "./components/project/projectlist";
 import { ProjectDetailsContainer } from "./components/project/project.details.container";
+import { keepTheme } from "./service/theme";
 
 function App() {
+  useEffect(() => {
+    keepTheme();
+  })
+
   const [isDBReady, setIsDBReady] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
 
   const [openProject, setOpenProject] = useState<CrochetProject | null>(null);
 
   const [projects, setProjects] = useState<CrochetProject[] | []>([]);
-
-
 
   // declare this async method
   const handleGetProjects = async () => {

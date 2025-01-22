@@ -2,7 +2,7 @@ import { FC, useEffect, useRef } from "react";
 import { CrochetPart, CrochetProject } from "../../service/db";
 import { ArrowBackOutline } from "../icons/back";
 import { ProjectDetails } from "./project.details";
-import { Timer } from "./timer";
+import { Timer } from "../ui/timer";
 
 
 

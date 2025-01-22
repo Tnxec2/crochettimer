@@ -12,7 +12,7 @@ export const AddProjectDialog : FC<Props> = ({handleAddProject}) => {
 
     return (<>
         <form onSubmit={handleAddProject}>
-        <input type="text" name="name" placeholder="Name" autoFocus />
+        <input type="text" name="name" placeholder="Name" autoFocus autoComplete="off" />
         <Checkbox name="hasMultipleParts" title="has multiple parts" />
         <Checkbox name="hasTimer" title="has timer" />
         <Checkbox name="hasSecondCounter" title="has second counter" />

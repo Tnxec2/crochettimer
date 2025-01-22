@@ -1,3 +1,37 @@
+.theme-dark {
+  --text: #ffffff;
+  --light-text: #ffffff;
+  --accent-text: #ffffff;
+  --background: #292929;
+  --accent: #004333;
+  --border: #9c9c9c;
+  --error: #d34242;
+  --danger: #672b2b;
+  --button-bg: #292929;
+  --button-text: #ffffff;
+  --stop: rgb(255, 96, 68);
+  --play: rgb(56, 255, 56);
+}
+
+.theme-light {
+  --text: #000000;
+  --light-text: #8d8d8d;
+  --accent-text: #000000;
+  --background: #ffffff;
+  --accent: #00ffbf;
+  --border: #000000;
+  --danger: #d34242;
+  --error: #d34242;
+  --button-bg: #ececec;
+  --button-text: #ffffff;
+  --stop: rgb(209, 81, 58);
+  --play: rgb(34, 143, 34);
+}
+
+html, #root {
+  background-color: var(--background);
+  color: var(--text);
+}
 
 
 .App {
@@ -13,8 +47,8 @@
 }
 
 .error {
-  background-color: #a86565;
-  color: white;
+  background-color: var(--error);
+  color: var(--light-text);
   display: flex;
   align-content: center;
 }
@@ -45,15 +79,17 @@ nav * {
 }
 
 .button {
-  border: 1px solid black;
+  border: 1px solid var(--border);
   padding: 1em;
+  min-width: 2em;
   cursor: pointer;
-  background-color: buttonface;
+  background-color: var(--accent);
+  color: var(--accent-text);
   font-size: 1em;
 }
 
 .button-danger {
-  background-color: #c76e6e;
+  background-color: var(--danger);
 }
 
 .button.big {
@@ -67,9 +103,11 @@ form {
 
 input, .input {
   padding: 1em;
-  border: 1px solid black;
-  margin-bottom: 0.5em;
+  border: 1px solid var(--border);
+  /* margin-bottom: 0.5em; */
   display: flex;
+  background-color: var(--background);
+  color: var(--text);
 }
 
 .input > label {
@@ -83,7 +121,7 @@ input, .input {
 
 .list-item * {
   align-content: center;
-  border: 1px solid black;
+  border: 1px solid var(--border);
 }
 
 .card-title {
@@ -97,7 +135,7 @@ input, .input {
 
 .counter {
   display: flex;
-  border: 1px solid black;
+  border: 1px solid var(--border);
   align-items: center;
   text-align: center;
 }
@@ -112,7 +150,7 @@ input, .input {
 
 .timer {
   display: flex;
-  border: 1px solid black;
+  border: 1px solid var(--border);
   align-items: center;
   text-align: center;
 }
@@ -126,11 +164,11 @@ input, .input {
 }
 
 .stop {
-  color: tomato;
+  color: var(--stop);
 }
 
 .start {
-  color: forestgreen;
+  color: var(--play);
 }
 
 .hidden {
@@ -143,7 +181,7 @@ input[type="checkbox"] {
   /* Remove most all native input styles */
   appearance: none;
   /* For iOS < 15 */
-  background-color: var(--form-background);
+  background-color: var(--background);
   /* Not removed via appearance */
   margin: 0;
 
@@ -167,7 +205,7 @@ input[type="checkbox"]::before {
   transform: scale(0);
   transform-origin: bottom left;
   transition: 120ms transform ease-in-out;
-  box-shadow: inset 1em 1em var(--form-control-color);
+  box-shadow: inset 1em 1em var(--accent-text);
   /* Windows High Contrast Mode */
   background-color: CanvasText;
 }

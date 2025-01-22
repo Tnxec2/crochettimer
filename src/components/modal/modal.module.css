@@ -8,19 +8,18 @@
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: var(--background); /* Fallback color */
+  /* background-color: rgba(255, 255, 255, 0.4); */ /* Black w/ opacity */ 
 }
 
 .modal{
   display: block;
-  background-color: #fefefe;
+  background-color: var(--background);
   margin: 0 auto;
   /* padding: 20px; */
-  border: 1px solid #888;
+  border: 1px solid var(--border);
   max-width: 768px;
-  
-  height: 100%;
+  /* height: 100%; */
 }
 
 .modal__head{
@@ -37,5 +36,5 @@
 }
 
 .modal__close:hover{
-  color: hsl(0, 70%, 70%);
+  color: var(--accent);
 }
