@@ -14,6 +14,7 @@ export const PartDetails : FC<Props> = ({part, onUpdate, hasSecondCounter, timer
 
     return (<div className="">
             {timer}
+            <div className="card-title">{part.name}</div>
             <Counter counter={part.counter} 
             updateCounter={(c) => {onUpdate({...part, counter: c})}} 
             isSecond={false}

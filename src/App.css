@@ -49,10 +49,15 @@ nav * {
   padding: 1em;
   cursor: pointer;
   background-color: buttonface;
+  font-size: 1em;
 }
 
 .button-danger {
   background-color: #c76e6e;
+}
+
+.button.big {
+  font-size: 2em;
 }
 
 form {
@@ -86,6 +91,7 @@ input, .input {
   font-family: sans-serif;
   font-weight: bold;
   text-align: left;
+  font-size: 1.5em;
   padding: 1em;
 }
 
@@ -98,10 +104,25 @@ input, .input {
 
 .counter-title {
   flex: 1;
-  font-family: sans-serif;
   font-weight: bold;
   text-align: center;
-  padding: 1em;
+  font-size: x-large;
+  /* padding: 1em; */
+}
+
+.timer {
+  display: flex;
+  border: 1px solid black;
+  align-items: center;
+  text-align: center;
+}
+
+.timer-title {
+  flex: 1;
+  font-weight: bold;
+  text-align: center;
+  font-size: x-large;
+  /* padding: 1em; */
 }
 
 .stop {

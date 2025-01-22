@@ -1,5 +1,5 @@
 import { FC, ReactNode, useState } from "react";
-import { CrochetPart } from "../../service/db";
+import { CrochetPart, CrochetProject } from "../../service/db";
 import Modal from "../modal/modal";
 import { EditPartDialog } from "./editPartDialog";
 import { PartDetails } from "./part.details";
@@ -7,15 +7,15 @@ import { PartDetails } from "./part.details";
 
 
 type Props = {
+    project: CrochetProject,
     part: CrochetPart,
     onUpdatePart: (part: CrochetPart) => void,
-    hasSecondCounter: boolean,
+    onDeletePart: (part: CrochetPart) => void,
     timer?: ReactNode
-    isTimerOn: boolean
     stopTimer: () => void
 }
 
-export const PartCard : FC<Props> = ({part, onUpdatePart, hasSecondCounter, timer, isTimerOn, stopTimer}) => {
+export const PartCard : FC<Props> = ({project, part, onUpdatePart, onDeletePart, timer, stopTimer}) => {
     const [editPart, setEditPart] = useState<CrochetPart | null>(null);
     const [openPart, setOpenPart] = useState<CrochetPart | null>(null);
 
@@ -49,6 +49,7 @@ export const PartCard : FC<Props> = ({part, onUpdatePart, hasSecondCounter, time
           <EditPartDialog
             part={editPart}
             handleUpdate={handleUpdatePart}
+            onDeletePart={onDeletePart}
           />
         </Modal>
       )}
@@ -56,10 +57,10 @@ export const PartCard : FC<Props> = ({part, onUpdatePart, hasSecondCounter, time
       {openPart && (
         <Modal
           open={openPart !== null}
-          modalLabel={openPart.name}
+          modalLabel={project.name}
           onClose={() => {
             
-            if (isTimerOn && window.confirm('stop timer?')) stopTimer();
+            if (project.timerOn && window.confirm('stop timer?')) stopTimer();
             setOpenPart(null);
           }}
         >
@@ -69,7 +70,7 @@ export const PartCard : FC<Props> = ({part, onUpdatePart, hasSecondCounter, time
                 onUpdatePart(p);
                 setOpenPart(p);
             }}
-            hasSecondCounter={hasSecondCounter}
+            hasSecondCounter={project.hasSecondCounter}
             timer={timer}
           />
         </Modal>

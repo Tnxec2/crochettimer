@@ -13,11 +13,12 @@ type Props = {
     timer: ReactNode,
     onAddPart: (name: string) => void,
     onUpdatePart: (part: CrochetPart) => void,
+    onDeletePart: (part: CrochetPart) => void,
     onUpdate: (project: CrochetProject) => void,
     stopTimer: () => void,
 }
 
-export const ProjectDetails : FC<Props> = ({project, timer, onAddPart, onUpdatePart, onUpdate, stopTimer}) => {
+export const ProjectDetails : FC<Props> = ({project, timer, onAddPart, onUpdatePart, onDeletePart, onUpdate, stopTimer}) => {
     const [openNewPartNameDialog, setOpenNewPartNameDialog] = useState(false)
 
     return (<div className="">
@@ -28,12 +29,12 @@ export const ProjectDetails : FC<Props> = ({project, timer, onAddPart, onUpdateP
             {project.parts?.map((part) => 
                 <PartCard 
                     key={part.id}
+                    project={project}
                     part={part}  
                     onUpdatePart={onUpdatePart} 
-                    hasSecondCounter={project.hasSecondCounter}
                     timer={project.hasTimer && timer}
-                    isTimerOn={project.timerOn}
                     stopTimer={stopTimer}
+                    onDeletePart={onDeletePart}
                     />
             )
             }
