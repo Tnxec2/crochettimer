@@ -18,7 +18,7 @@
   --light-text: #8d8d8d;
   --accent-text: #000000;
   --background: #ffffff;
-  --accent: #00ffbf;
+  --accent: #dbf2ec;
   --border: #000000;
   --danger: #d34242;
   --error: #d34242;
@@ -62,7 +62,7 @@ html, #root {
 }
 
 .p3 {
-  padding: 1em;
+  padding: 1em !important;
 }
 
 nav{
@@ -117,10 +117,8 @@ input, .input {
 .list-item {
   display: flex;
   flex-direction: row;
-}
-
-.list-item * {
-  align-content: center;
+  text-align: center;
+  align-items: center;
   border: 1px solid var(--border);
 }
 
@@ -129,8 +127,8 @@ input, .input {
   font-family: sans-serif;
   font-weight: bold;
   text-align: left;
-  font-size: 1.5em;
-  padding: 1em;
+  font-size: 1.5rem;
+  padding: 0 1em;
 }
 
 .counter {
@@ -144,8 +142,7 @@ input, .input {
   flex: 1;
   font-weight: bold;
   text-align: center;
-  font-size: x-large;
-  /* padding: 1em; */
+  font-size: 2rem;
 }
 
 .timer {

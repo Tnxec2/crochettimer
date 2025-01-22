@@ -2,7 +2,7 @@ import { FC, ReactNode, useState } from "react";
 import { CrochetPart, CrochetProject } from "../../service/db";
 import Modal from "../modal/modal";
 import { EditPartDialog } from "./editPartDialog";
-import { PartDetails } from "./part.details";
+import { More } from "../icons/morevert";
 
 
 
@@ -13,11 +13,12 @@ type Props = {
     onDeletePart: (part: CrochetPart) => void,
     timer?: ReactNode
     stopTimer: () => void
+    openPart: (p: CrochetPart) => void
 }
 
-export const PartCard : FC<Props> = ({project, part, onUpdatePart, onDeletePart, timer, stopTimer}) => {
+export const PartCard : FC<Props> = ({project, part, onUpdatePart, onDeletePart, timer, stopTimer, openPart}) => {
     const [editPart, setEditPart] = useState<CrochetPart | null>(null);
-    const [openPart, setOpenPart] = useState<CrochetPart | null>(null);
+
 
     const handleUpdatePart = async (
         part: CrochetPart,
@@ -34,9 +35,8 @@ export const PartCard : FC<Props> = ({project, part, onUpdatePart, onDeletePart,
     }
 
     return <><div className="list-item" >
-        <div className="card-title" onClick={() => {setOpenPart(part)}}>{part.name}</div>
-
-        <div className="button" onClick={() => {setEditPart(part)}}>Edit</div>
+        <div className="card-title" onClick={() => {openPart(part)}}>{part.name}</div>
+        <div className="button" onClick={() => {setEditPart(part)}}><More /></div>
     </div>
     {editPart && (
         <Modal
@@ -50,28 +50,6 @@ export const PartCard : FC<Props> = ({project, part, onUpdatePart, onDeletePart,
             part={editPart}
             handleUpdate={handleUpdatePart}
             onDeletePart={onDeletePart}
-          />
-        </Modal>
-      )}
-
-      {openPart && (
-        <Modal
-          open={openPart !== null}
-          modalLabel={project.name}
-          onClose={() => {
-            
-            if (project.timerOn && window.confirm('stop timer?')) stopTimer();
-            setOpenPart(null);
-          }}
-        >
-          <PartDetails
-            part={openPart}
-            onUpdate={(p) => {
-                onUpdatePart(p);
-                setOpenPart(p);
-            }}
-            hasSecondCounter={project.hasSecondCounter}
-            timer={timer}
           />
         </Modal>
       )}

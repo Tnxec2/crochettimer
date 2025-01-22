@@ -3,6 +3,7 @@ import { CrochetPart, CrochetProject } from "../../service/db";
 import { ArrowBackOutline } from "../icons/back";
 import { ProjectDetails } from "./project.details";
 import { Timer } from "../ui/timer";
+import { ThemeToggle } from "../ui/theme.toggle";
 
 
 
@@ -112,6 +113,7 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
 
 <>
 <nav>
+  <ThemeToggle />
   <div className="app-title">
     <h1>{project.name}</h1>
   </div>

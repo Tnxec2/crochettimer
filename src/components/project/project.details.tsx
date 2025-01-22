@@ -5,73 +5,61 @@ import { PartCard } from "./part.card";
 import Modal from "../modal/modal";
 import { InputDialog } from "../ui/inputNameDialog";
 import { millisecondsToHuman } from "../../service/time";
-
-
+import { PartList } from "./part.list";
 
 type Props = {
-    project: CrochetProject,
-    timer: ReactNode,
-    onAddPart: (name: string) => void,
-    onUpdatePart: (part: CrochetPart) => void,
-    onDeletePart: (part: CrochetPart) => void,
-    onUpdate: (project: CrochetProject) => void,
-    stopTimer: () => void,
-}
+  project: CrochetProject;
+  timer: ReactNode;
+  onAddPart: (name: string) => void;
+  onUpdatePart: (part: CrochetPart) => void;
+  onDeletePart: (part: CrochetPart) => void;
+  onUpdate: (project: CrochetProject) => void;
+  stopTimer: () => void;
+};
 
-export const ProjectDetails : FC<Props> = ({project, timer, onAddPart, onUpdatePart, onDeletePart, onUpdate, stopTimer}) => {
-    const [openNewPartNameDialog, setOpenNewPartNameDialog] = useState(false)
-
-    return (<div className="">
-        
-        { project.hasMultipleParts ? 
+export const ProjectDetails: FC<Props> = ({
+  project,
+  timer,
+  onAddPart,
+  onUpdatePart,
+  onDeletePart,
+  onUpdate,
+  stopTimer,
+}) => {
+  return (
+    <div className="">
+      {project.hasMultipleParts ? (
+        <PartList
+          project={project}
+          timer={timer}
+          onAddPart={onAddPart}
+          onUpdatePart={onUpdatePart}
+          onDeletePart={onDeletePart}
+          stopTimer={stopTimer}
+        />
+      ) : (
         <>
-            {project.hasTimer && <div className="counter-title">Total: {millisecondsToHuman(project.time)}</div> }
-            {project.parts?.map((part) => 
-                <PartCard 
-                    key={part.id}
-                    project={project}
-                    part={part}  
-                    onUpdatePart={onUpdatePart} 
-                    timer={project.hasTimer && timer}
-                    stopTimer={stopTimer}
-                    onDeletePart={onDeletePart}
-                    />
-            )
-            }
-            <div className="button" onClick={() => setOpenNewPartNameDialog(true)}>Add part</div>
-        </> 
-        : 
-        <>
-            <div className="">
+          <div className="">
             {project.hasTimer && timer}
-            <Counter counter={project.counter} 
-            updateCounter={(c) => {onUpdate({...project, counter: c})}} 
-            isSecond={false}
-             />
-             { project.hasSecondCounter && 
-             <Counter counter={project.secondCounter} 
-            updateCounter={(c) => {onUpdate({...project, secondCounter: c})}} 
-            isSecond={true}
-             /> }
-    </div>
-        </>}
-
-
-        <Modal
-          open={openNewPartNameDialog}
-          modalLabel="New part"
-          onClose={() => {
-            setOpenNewPartNameDialog(false);
-          }}
-        >
-            <InputDialog 
-                defaultValue=''
-                placeholder="name"
-                save={(v) => {
-                    onAddPart(v);
-                    setOpenNewPartNameDialog(false);
-                }}
+            <Counter
+              counter={project.counter}
+              updateCounter={(c) => {
+                onUpdate({ ...project, counter: c });
+              }}
+              isSecond={false}
             />
-        </Modal>
-    </div>)
-}
+            {project.hasSecondCounter && (
+              <Counter
+                counter={project.secondCounter}
+                updateCounter={(c) => {
+                  onUpdate({ ...project, secondCounter: c });
+                }}
+                isSecond={true}
+              />
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
