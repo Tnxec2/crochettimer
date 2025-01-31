@@ -14,6 +14,7 @@ export type CrochetProject = {
   secondCounter: number;
   timerOn: boolean;
   time: number;
+  note: string;
 }
 
 export type CrochetPart = {

@@ -1,10 +1,7 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode } from "react";
 import { CrochetPart, CrochetProject } from "../../service/db";
 import { Counter } from "../ui/counter";
-import { PartCard } from "./part.card";
-import Modal from "../modal/modal";
-import { InputDialog } from "../ui/inputNameDialog";
-import { millisecondsToHuman } from "../../service/time";
+
 import { PartList } from "./part.list";
 
 type Props = {
@@ -28,6 +25,7 @@ export const ProjectDetails: FC<Props> = ({
 }) => {
   return (
     <div className="">
+      <div className="notes">Notes: {project.note.split('\n').map((l) => <>{l}<br /></>)}</div>
       {project.hasMultipleParts ? (
         <PartList
           project={project}

@@ -13,7 +13,7 @@ type Props = {
 export const ProjectCard : FC<Props> = ({item, onEdit, onOpen}) => {
 
     return <div className="list-item" >
-        <div className="card-title" onClick={onOpen}>{item.name}</div>
+        <div className="card-title" title={item.note ? `${item.name}\n\n${item.note}` : item.name} onClick={onOpen}>{item.name}</div>
         { item.hasMultipleParts && item.parts && <div className="p3">{item.parts?.length}</div> }
         <div className="button" onClick={onEdit}><More /></div>
     </div>

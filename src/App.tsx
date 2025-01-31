@@ -40,12 +40,12 @@ function App() {
     if (!isDBReady) handleInitDB();
   }, [isDBReady]);
 
-  const updateProject = useCallback(async (project: CrochetProject) => {
+  const updateProject = useCallback(async (project: CrochetProject, reopen: boolean) => {
     try {
       const res = await updateData(Stores.Projects, project.id, project);
       // refetch data after update data
       handleGetProjects();
-      setOpenProject(project);
+      if (reopen) setOpenProject(project); // only if a project is open
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -56,7 +56,7 @@ function App() {
   }, []);
   
   return (
-    <div className="App">
+    <div className="App lato-regular">
       {!isDBReady && <div>DB is not ready</div>}
       {error && (
         <ErrorMessage
@@ -78,7 +78,7 @@ function App() {
         <ProjectDetailsContainer
           project={openProject}
           onOpenProject={setOpenProject}
-          onUpdateProject={updateProject}
+          onUpdateProject={(p) => updateProject(p, true)}
          />
       )}
     </div>

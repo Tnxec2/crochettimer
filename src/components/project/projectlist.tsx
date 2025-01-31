@@ -10,7 +10,7 @@ import { ThemeToggle } from "../ui/theme.toggle";
 type Props = {
   projects: CrochetProject[];
   onOpenProject: (p: CrochetProject | null) => void;
-  onUpdateProject: (p: CrochetProject) => void;
+  onUpdateProject: (p: CrochetProject, reopen: boolean) => void;
   setError: (e: string) => void;
   reload: () => void;
 };
@@ -30,6 +30,7 @@ export const ProjectList: FC<Props> = ({
 
     const target = e.target as typeof e.target & {
       name: { value: string };
+      note: { value: string };
       hasMultipleParts: { checked: boolean };
       hasTimer: { checked: boolean };
       hasSecondCounter: { checked: boolean };
@@ -54,6 +55,7 @@ export const ProjectList: FC<Props> = ({
       secondCounter: 1,
       time: 0,
       timerOn: false,
+      note: target.note.value
     };
 
     try {
@@ -71,12 +73,15 @@ export const ProjectList: FC<Props> = ({
 
   const handleUpdateProject = async (
     project: CrochetProject,
+    reopen: boolean,
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const target = e.target as typeof e.target & {
       name: { value: string };
+      note: { value: string };
       hasMultipleParts: { checked: boolean };
       hasTimer: { checked: boolean };
       hasSecondCounter: { checked: boolean };
@@ -87,6 +92,7 @@ export const ProjectList: FC<Props> = ({
     const newProject = {
       ...project,
       name: target.name.value,
+      note: target.note.value,
       hasMultipleParts: target.hasMultipleParts.checked,
       hasTimer: target.hasTimer.checked,
       hasSecondCounter: target.hasSecondCounter.checked,
@@ -94,7 +100,7 @@ export const ProjectList: FC<Props> = ({
 
     console.log(target, newProject);
 
-    onUpdateProject(newProject);
+    onUpdateProject(newProject, reopen);
   };
 
   const handleRemoveProject = async (id: string) => {

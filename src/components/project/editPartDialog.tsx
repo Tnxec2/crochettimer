@@ -16,7 +16,7 @@ export const EditPartDialog : FC<Props> = ({part, handleUpdate, onDeletePart}) =
         <button type="submit" className="button">Save Part</button>
         <button type="button" className="button button-danger" onClick={() => {
             if (window.confirm(`Would you delete this part "${part.name}"?`)) onDeletePart(part)
-            }}>Delete Project</button>
+            }}>Delete Part</button>
       </form>
     </>)
 }

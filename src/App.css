@@ -18,7 +18,7 @@
   --light-text: #8d8d8d;
   --accent-text: #000000;
   --background: #ffffff;
-  --accent: #dbf2ec;
+  --accent: #00ffc2;
   --border: #000000;
   --danger: #d34242;
   --error: #d34242;
@@ -31,6 +31,9 @@
 html, #root {
   background-color: var(--background);
   color: var(--text);
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 
@@ -78,6 +81,15 @@ nav * {
   flex: 1;
 }
 
+.notes {
+  /* border: 1px solid #9c9c9c; */
+  background: var(--accent);
+  color: var(--accent-text);
+  font-family: "Lato", serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
 .button {
   border: 1px solid var(--border);
   padding: 1em;
@@ -101,7 +113,7 @@ form {
   flex-direction: column;
 }
 
-input, .input {
+input, .input, textarea {
   padding: 1em;
   border: 1px solid var(--border);
   /* margin-bottom: 0.5em; */
