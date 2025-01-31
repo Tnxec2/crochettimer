@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 import "./App.css";
 import {
@@ -18,6 +18,8 @@ function App() {
     keepTheme();
   })
 
+  const firstEffectRan = useRef(false)
+
   const [isDBReady, setIsDBReady] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
 
@@ -33,11 +35,18 @@ function App() {
 
   useEffect(() => {
     const handleInitDB = async () => {
-      const status = await initDB();
-      setIsDBReady(status);
-      handleGetProjects();
+      initDB().then((status) => {
+        setIsDBReady(status)
+        if (status) handleGetProjects();
+      })
     };
-    if (!isDBReady) handleInitDB();
+
+    if (firstEffectRan.current) {
+      if (!isDBReady) handleInitDB();
+    }
+    return () => {
+      firstEffectRan.current = true
+    }
   }, [isDBReady]);
 
   const updateProject = useCallback(async (project: CrochetProject, reopen: boolean) => {
