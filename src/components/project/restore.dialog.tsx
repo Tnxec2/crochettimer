@@ -16,12 +16,8 @@ export const RestoreDialog: FC<Props> = ({ reload }) => {
             if (json) {
                 let j: CrochetProject[] = JSON.parse(json.toString());
 
-                await addMultipleData(j.map((p) => {
-                    return {
-                        ...p,
-                        id: Date.now().toString()
-                    }
-                }))
+
+                await addMultipleData(j)
                 reload();
             }
         }
@@ -38,12 +34,17 @@ export const RestoreDialog: FC<Props> = ({ reload }) => {
 
     return (<>
         <p>Select JSON backup file to restore</p>
+        <div className="" style={{display: 'flex'}}>
         <input
             type="file"
+            style={{flex: 1}}
             accept="application/json"
             id="jsonLoad"
             onChange={uploadJsonFile}
+            title="Select JSON backup file to restore"
         // onClick={onClick} // triger reopen same file
         />
+
+        </div>
     </>)
 }

@@ -95,16 +95,21 @@ export const addMultipleData = <T>(projects: CrochetProject[]): Promise<CrochetP
       db = request.result;
       const tx = db.transaction(Stores.Projects, 'readwrite');
       const store = tx.objectStore(Stores.Projects);
+      var id = Date.now()
       projects.forEach((v)=> {
         console.log(v);
         
-        store.add(v);
+        store.add({
+          ...v,
+          id: (id++).toString()
+        });
       })
       resolve(projects)
     };
 
     request.onerror = () => {
       const error = request.error?.message
+      console.error("Fehler beim Speichern:", error);
       if (error) {
         resolve(error);
       } else {
