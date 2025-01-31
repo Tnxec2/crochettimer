@@ -87,6 +87,33 @@ export const addData = <T>(storeName: string, data: T): Promise<T|string|null> =
   });
 };
 
+export const addMultipleData = <T>(projects: CrochetProject[]): Promise<CrochetProject[]|string|null> => {
+  return new Promise((resolve) => {
+    request = indexedDB.open(dbName, version);
+
+    request.onsuccess = () => {
+      db = request.result;
+      const tx = db.transaction(Stores.Projects, 'readwrite');
+      const store = tx.objectStore(Stores.Projects);
+      projects.forEach((v)=> {
+        console.log(v);
+        
+        store.add(v);
+      })
+      resolve(projects)
+    };
+
+    request.onerror = () => {
+      const error = request.error?.message
+      if (error) {
+        resolve(error);
+      } else {
+        resolve('Unknown error');
+      }
+    };
+  });
+};
+
 export const getStoreData = <T>(storeName: Stores): Promise<T[]> => {
   return new Promise((resolve) => {
     request = indexedDB.open(dbName, version);

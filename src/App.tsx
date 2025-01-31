@@ -12,6 +12,7 @@ import { ErrorMessage } from "./components/ui/error";
 import { ProjectList } from "./components/project/projectlist";
 import { ProjectDetailsContainer } from "./components/project/project.details.container";
 import { keepTheme } from "./service/theme";
+import { HelpPage } from "./components/project/help";
 
 function App() {
   useEffect(() => {
@@ -25,6 +26,8 @@ function App() {
   const [error, setError] = useState<string | null>();
 
   const [showArchived, setShowArchived] = useState<boolean>(false);
+
+  const [openHelpPage, setOpenHelpPage] = useState<boolean>(false);
 
   const [openProject, setOpenProject] = useState<CrochetProject | null>(null);
 
@@ -78,7 +81,7 @@ function App() {
           error={error}
         />
       )}
-      {!openProject ? (
+      { !openHelpPage ? (!openProject ? (
         <ProjectList 
           showArchived={showArchived}
           toggleArchived={() => {setShowArchived(!showArchived)}}
@@ -87,6 +90,7 @@ function App() {
           onUpdateProject={updateProject}
           reload={handleGetProjects}
           setError={setError}
+          openHelpPage={() => {setOpenHelpPage(true)}}
         />
       ) : (
         <ProjectDetailsContainer
@@ -94,7 +98,12 @@ function App() {
           onOpenProject={setOpenProject}
           onUpdateProject={(p) => updateProject(p, true)}
          />
-      )}
+      )) : 
+      <HelpPage
+        onClose={() => {setOpenHelpPage(false)}}
+        reload={() => handleGetProjects()}
+      />
+      }
     </div>
   );
 }

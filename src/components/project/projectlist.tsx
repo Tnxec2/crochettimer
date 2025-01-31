@@ -7,6 +7,7 @@ import { AddProjectDialog } from "./addProjectDialog";
 import { EditProjectDialog } from "./editProjectDialog";
 import { ThemeToggle } from "../ui/theme.toggle";
 import { Archive } from "../icons/archive";
+import { Help } from "../icons/help";
 
 type Props = {
   showArchived: boolean,
@@ -16,6 +17,7 @@ type Props = {
   onUpdateProject: (p: CrochetProject, reopen: boolean) => void;
   setError: (e: string) => void;
   reload: () => void;
+  openHelpPage: () => void;
 };
 
 export const ProjectList: FC<Props> = ({
@@ -26,14 +28,13 @@ export const ProjectList: FC<Props> = ({
   onUpdateProject,
   reload,
   setError,
+  openHelpPage
 }) => {
 
-
-
-  
   const filteredProjects = projects.filter((p) => showArchived === p.archived )
 
   const [openAddProject, setOpenAddProject] = useState<boolean>(false);
+
   const [editProject, setEditProject] = useState<CrochetProject | null>(null);
 
   const handleAddProject = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -137,10 +138,19 @@ export const ProjectList: FC<Props> = ({
     <>
       <nav>
         <ThemeToggle />
+        <div
+          className="button"
+          onClick={() => {
+            openHelpPage();
+          }}
+        >
+          <Help />
+        </div>
         <div className="app-title">
           <h1>{showArchived ? 'Archived Projects' : 'Projects'}</h1>
         </div>
-        { !showArchived &&
+        { !showArchived && <>
+
         <div
           className="button"
           onClick={() => {
@@ -148,7 +158,7 @@ export const ProjectList: FC<Props> = ({
           }}
         >
           <HeavyPlusSign />
-        </div> }
+        </div></> }
         <div
           className="button"
           onClick={() => {
