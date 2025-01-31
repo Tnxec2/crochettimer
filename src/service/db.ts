@@ -15,6 +15,7 @@ export type CrochetProject = {
   timerOn: boolean;
   time: number;
   note: string;
+  archived?: boolean;
 }
 
 export type CrochetPart = {

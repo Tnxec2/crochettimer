@@ -21,7 +21,10 @@ function App() {
   const firstEffectRan = useRef(false)
 
   const [isDBReady, setIsDBReady] = useState<boolean>(false);
+
   const [error, setError] = useState<string | null>();
+
+  const [showArchived, setShowArchived] = useState<boolean>(false);
 
   const [openProject, setOpenProject] = useState<CrochetProject | null>(null);
 
@@ -77,6 +80,8 @@ function App() {
       )}
       {!openProject ? (
         <ProjectList 
+          showArchived={showArchived}
+          toggleArchived={() => {setShowArchived(!showArchived)}}
           projects={projects}
           onOpenProject={setOpenProject}
           onUpdateProject={updateProject}

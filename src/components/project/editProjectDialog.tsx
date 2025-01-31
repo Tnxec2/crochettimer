@@ -20,6 +20,8 @@ export const EditProjectDialog : FC<Props> = ({project, handleUpdate, onDeletePr
         <Checkbox name="hasTimer" title="has timer" defaultChecked={project.hasTimer}/>
         <Checkbox name="hasSecondCounter" title="has second counter" defaultChecked={project.hasSecondCounter} />
         <textarea name="note"  rows={5} title="notes" placeholder="notes" defaultValue={project.note}></textarea>
+
+        <Checkbox name="archived" title="project archived" defaultChecked={project.archived === true} />
         <button type="submit" className="button">Save Project</button>
         <button type="button" className="button button-danger" onClick={() => {
             if (window.confirm('Would you delete project?')) onDeleteProject()
