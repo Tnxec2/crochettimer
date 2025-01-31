@@ -140,14 +140,6 @@ export const ProjectList: FC<Props> = ({
         <div className="app-title">
           <h1>{showArchived ? 'Archived Projects' : 'Projects'}</h1>
         </div>
-        <div
-          className="button"
-          onClick={() => {
-            toggleArchived();
-          }}
-        >
-          <Archive />
-        </div>
         { !showArchived &&
         <div
           className="button"
@@ -157,6 +149,15 @@ export const ProjectList: FC<Props> = ({
         >
           <HeavyPlusSign />
         </div> }
+        <div
+          className="button"
+          onClick={() => {
+            toggleArchived();
+          }}
+        >
+          <Archive />
+        </div>
+
       </nav>
 
       <div className="card-list">
