@@ -29,7 +29,7 @@ export const ProjectDetails: FC<Props> = ({
       {project.hasMultipleParts ? (
         <PartList
           project={project}
-          timer={timer}
+          timer={project.hasTimer ? timer : null}
           onAddPart={onAddPart}
           onUpdatePart={onUpdatePart}
           onDeletePart={onDeletePart}
