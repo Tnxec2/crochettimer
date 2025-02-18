@@ -6,14 +6,14 @@ import { Checkbox } from "../ui/checkbox";
 
 type Props = {
     project: CrochetProject,
-    handleUpdate: (project: CrochetProject, reopen: boolean, e: React.FormEvent<HTMLFormElement>) => Promise<void>,
+    handleUpdate: (project: CrochetProject, e: React.FormEvent<HTMLFormElement>) => Promise<void>,
     onDeleteProject: () => void
 }
 
 export const EditProjectDialog : FC<Props> = ({project, handleUpdate, onDeleteProject}) => {
 
     return (<>
-        <form onSubmit={(e) => {handleUpdate(project, false, e)}}>
+        <form onSubmit={(e) => {handleUpdate(project, e)}}>
         <input type="hidden" className="hidden" name="id"  disabled value={project.id} />
         <input type="text" name="name" placeholder="Name" defaultValue={project.name}  autoComplete="off"/>
         <Checkbox name="hasMultipleParts" title="has multiple parts" defaultChecked={project.hasMultipleParts}/>

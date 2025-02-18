@@ -36,6 +36,7 @@ export const PartCard : FC<Props> = ({project, part, onUpdatePart, onDeletePart,
 
     return <><div className="list-item" >
         <div className="card-title" onClick={() => {openPart(part)}}>{part.name}</div>
+        <div className="p3">{part.counter}</div>
         <div className="button" onClick={() => {setEditPart(part)}}><More /></div>
     </div>
     {editPart && (

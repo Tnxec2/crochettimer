@@ -63,7 +63,7 @@ export const initDB = (): Promise<boolean> => {
   });
 };
 
-export const addData = <T>(storeName: string, data: T): Promise<T|string|null> => {
+export const addData = <T>(storeName: string, data: T): Promise<T|null> => {
   return new Promise((resolve) => {
     request = indexedDB.open(dbName, version);
 
@@ -74,15 +74,6 @@ export const addData = <T>(storeName: string, data: T): Promise<T|string|null> =
       const store = tx.objectStore(storeName);
       store.add(data);
       resolve(data);
-    };
-
-    request.onerror = () => {
-      const error = request.error?.message
-      if (error) {
-        resolve(error);
-      } else {
-        resolve('Unknown error');
-      }
     };
   });
 };

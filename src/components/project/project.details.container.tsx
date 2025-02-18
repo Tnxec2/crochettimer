@@ -9,19 +9,19 @@ import { PartDetails } from "./part.details";
 import { Archive } from "../icons/archive";
 
 
-export const ProjectDetailsContainer : FC = () => {
-  const {id, partid} = useParams();
+export const ProjectDetailsContainer: FC = () => {
+  const { id, partid } = useParams();
 
   const navigate = useNavigate();
 
   const timerRef = useRef<NodeJS.Timeout>(null);
 
-  const [project, setProject] = useState<CrochetProject|null>()
+  const [project, setProject] = useState<CrochetProject | null>()
 
   useEffect(() => {
     const handleGetProject = (id: string) => {
       console.log('handleGetProject');
-      
+
       getById<CrochetProject>(Stores.Projects, id)
         .then((data) => setProject(data))
     };
@@ -30,7 +30,7 @@ export const ProjectDetailsContainer : FC = () => {
 
   const updateProject = useCallback(async (project: CrochetProject) => {
     updateData(Stores.Projects, project.id, project)
-    .then((data) => setProject(data)) 
+      .then((data) => setProject(data))
   }, []);
 
   useEffect(() => {
@@ -126,68 +126,68 @@ export const ProjectDetailsContainer : FC = () => {
   };
 
   const timer = useMemo(() => project && project.hasTimer ? <Timer
-  isRunning={project.timerOn}
-  timer={project.time}
-  reset={() => {
-    onResetTimer(project);
-  }}
-  start={() => {
-    onStartTimer(project);
-  }}
-  stop={() => {
-    onStopTimer(project);
-  }}
-/> : '', [project])
-
-    return (
-
-<>
-<nav>
-  <ThemeToggle />
-  <div className="app-title">
-    <h1>{project?.archived && <Archive />} {project?.name}</h1>
-  </div>
-  <div
-    className="button"
-    onClick={() => {
-      if (project && partid) navigate(`/${project.id}`)
-      else navigate('/')
+    isRunning={project.timerOn}
+    timer={project.time}
+    reset={() => {
+      onResetTimer(project);
     }}
-  >
-    <ArrowBackOutline />
-  </div>
-</nav>
-{ project && !partid &&
-<ProjectDetails
-  project={project}
-  onAddPart={(name) => {
-    handleAddPart(project, name);
-  }}
-  onUpdatePart={(p) => {
-    handleUpdatePart(project, p);
-  }}
-  onDeletePart={(p) => {
-    handleDeletePart(project, p);
-  }}
-  onUpdate={async (p) => {
-    updateProject(p);
-  }}
-  timer={timer}
-  stopTimer={() => {
-    onStopTimer(project);
-  }}
-/>
-}
-{ project?.parts && partid && 
-  <PartDetails
-      part={project.parts?.find((part) => part.id === partid)}
-      onUpdate={(p) => {
-        navigate(`/${project.id}/${p.id}}`);
-      }}
-      hasSecondCounter={project.hasSecondCounter}
-      timer={timer}
-    />
-}
-</>
-)
+    start={() => {
+      onStartTimer(project);
+    }}
+    stop={() => {
+      onStopTimer(project);
+    }}
+  /> : '', [project])
+
+  return (
+
+    <>
+      <nav>
+        <ThemeToggle />
+        <div className="app-title">
+          <h1>{project?.archived && <Archive />} {project?.name}</h1>
+        </div>
+        <div
+          className="button"
+          onClick={() => {
+            if (project && partid) navigate(`/${project.id}`)
+            else navigate('/')
+          }}
+        >
+          <ArrowBackOutline />
+        </div>
+      </nav>
+      {project && !partid &&
+        <ProjectDetails
+          project={project}
+          onAddPart={(name) => {
+            handleAddPart(project, name);
+          }}
+          onUpdatePart={(p) => {
+            handleUpdatePart(project, p);
+          }}
+          onDeletePart={(p) => {
+            handleDeletePart(project, p);
+          }}
+          onUpdate={async (p) => {
+            updateProject(p);
+          }}
+          timer={timer}
+          stopTimer={() => {
+            onStopTimer(project);
+          }}
+        />
+      }
+      {project?.parts && partid &&
+        <PartDetails
+          part={project.parts?.find((part) => part.id === partid)}
+          onUpdate={(p) => {
+            navigate(`/${project.id}/${p.id}}`);
+          }}
+          hasSecondCounter={project.hasSecondCounter}
+          timer={timer}
+        />
+      }
+    </>
+  )
 }

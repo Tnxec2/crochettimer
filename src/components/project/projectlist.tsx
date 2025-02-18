@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { CrochetProject, Stores, addData, deleteData, getStoreData } from "../../service/db";
+import { CrochetProject, Stores, addData, deleteData, getStoreData, updateData } from "../../service/db";
 import { HeavyPlusSign } from "../icons/plus";
 import { ProjectCard } from "./project.card";
 import Modal from "../modal/modal";
@@ -9,6 +9,7 @@ import { ThemeToggle } from "../ui/theme.toggle";
 import { Archive } from "../icons/archive";
 import { Help } from "../icons/help";
 import { useNavigate } from "react-router-dom";
+import { ArrowBackOutline } from "../icons/back";
 
 type Props = {
   showArchived: boolean,
@@ -24,16 +25,13 @@ export const ProjectList: FC<Props> = ({
 
   const navigate = useNavigate();
 
-
-  const [projects, setProjects] = useState<CrochetProject[] | []>([]);
-  const [filteredProjects, setFilteredProjects] = useState<CrochetProject[] | []>([]);
+  const [filteredProjects, setFilteredProjects] = useState<CrochetProject[]>([]);
 
   const handleGetProjects = useCallback( async () => {
     console.log('handleGetProjects');
     
     getStoreData<CrochetProject>(Stores.Projects)
       .then((data) => {
-        setProjects(data)
         setFilteredProjects(data.filter((p) => showArchived === p.archived ))
   }) }, [showArchived]) 
 
@@ -80,22 +78,19 @@ export const ProjectList: FC<Props> = ({
       archived: false,
     };
 
-    try {
-      const res = await addData(Stores.Projects, newProject);
-      // refetch data after creating data
-      handleGetProjects();
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong");
-      }
-    }
+      addData(Stores.Projects, newProject)
+      .then((data) => handleGetProjects())
+      .catch ((err: unknown) => {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Something went wrong");
+        }
+      })
   };
 
   const handleUpdateProject = async (
     project: CrochetProject,
-    reopen: boolean,
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
@@ -122,9 +117,15 @@ export const ProjectList: FC<Props> = ({
       archived: target.archived.checked,
     };
 
-    console.log(target, newProject);
-
-    //onUpdateProject(newProject, reopen);
+    updateData(Stores.Projects, project.id, newProject)
+      .then((data) => handleGetProjects())
+      .catch((err) => {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Something went wrong deleting the data");
+        }
+      })
   };
 
   const handleRemoveProject = async (id: string) => {
@@ -173,7 +174,7 @@ export const ProjectList: FC<Props> = ({
             toggleArchived();
           }}
         >
-          <Archive />
+          { !showArchived ? <Archive /> : <ArrowBackOutline />  }
         </div>
 
       </nav>
