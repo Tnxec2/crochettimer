@@ -1,12 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 import "./App.css";
 import {
-  CrochetProject,
-  Stores,
-  getStoreData,
   initDB,
-  updateData,
 } from "./service/db";
 import { ErrorMessage } from "./components/ui/error";
 import { ProjectList } from "./components/project/projectlist";
@@ -25,80 +22,49 @@ function App() {
 
   const [showArchived, setShowArchived] = useState<boolean>(false);
 
-  const [openHelpPage, setOpenHelpPage] = useState<boolean>(false);
-
-  const [openProject, setOpenProject] = useState<CrochetProject | null>(null);
-
-  const [projects, setProjects] = useState<CrochetProject[] | []>([]);
-
-  // declare this async method
-  const handleGetProjects = async () => {
-    const data = await getStoreData<CrochetProject>(Stores.Projects);
-    setProjects(data);
-  };
-
   useEffect(() => {
     const handleInitDB = async () => {
       initDB().then((status) => {
         setIsDBReady(status)
-        if (status) handleGetProjects();
       })
     };
 
     if (!isDBReady) handleInitDB();
   }, [isDBReady]);
 
-  const updateProject = useCallback(async (project: CrochetProject, reopen: boolean) => {
-    try {
-      const res = await updateData(Stores.Projects, project.id, project);
-      // refetch data after update data
-      handleGetProjects();
-      if (reopen) setOpenProject(project); // only if a project is open
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong");
-      }
-    }
-  }, []);
-  
   return (
-    <div className="App lato-regular">
-      {!isDBReady && <div>DB is not ready</div>}
-      {error && (
-        <ErrorMessage
-          onClose={() => {
-            setError(null);
-          }}
-          error={error}
-        />
-      )}
-      { !openHelpPage ? (!openProject ? (
-        <ProjectList 
-          showArchived={showArchived}
-          toggleArchived={() => {setShowArchived(!showArchived)}}
-          projects={projects}
-          onOpenProject={setOpenProject}
-          onUpdateProject={updateProject}
-          reload={handleGetProjects}
-          setError={setError}
-          openHelpPage={() => {setOpenHelpPage(true)}}
-        />
-      ) : (
-        <ProjectDetailsContainer
-          project={openProject}
-          onOpenProject={setOpenProject}
-          onUpdateProject={(p) => updateProject(p, true)}
-         />
-      )) : 
-      <HelpPage
-        onClose={() => {setOpenHelpPage(false)}}
-        reload={() => handleGetProjects()}
-      />
-      }
-    </div>
-  );
+    <HashRouter basename='/'>
+      <div className="App lato-regular">
+        {!isDBReady && <div>DB is not ready</div>}
+        {error && (
+          <ErrorMessage
+            onClose={() => {
+              setError(null);
+            }}
+            error={error}
+          />
+        )}
+        {isDBReady &&
+          <Routes>
+            <Route path="/" element={
+              <ProjectList
+                showArchived={showArchived}
+                toggleArchived={() => { setShowArchived(!showArchived) }}
+                setError={setError}
+              />
+            } />
+            <Route path="/help" element={
+              <HelpPage />
+            } />
+            <Route path="/:id" element={
+              <ProjectDetailsContainer />
+            } />
+            <Route path="/:id/:partid" element={
+              <ProjectDetailsContainer />
+            } />
+          </Routes>}
+      </div>
+    </HashRouter>);
 }
 
 export default App;

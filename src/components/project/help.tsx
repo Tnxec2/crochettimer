@@ -5,18 +5,15 @@ import { RestoreDialog } from "./restore.dialog";
 import { ThemeToggle } from "../ui/theme.toggle";
 import { ArrowBackOutline } from "../icons/back";
 import { CrochetProject, getStoreData, Stores } from "../../service/db";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
-  onClose: () => void
-  reload: () => {}
 };
 
 
 
-export const HelpPage: FC<Props> = ({
-  onClose,
-  reload
-}) => {
+export const HelpPage: FC<Props> = ({}) => {
+  const navigate = useNavigate();
   const [backup, setBackup] = useState<boolean>(false);
   const [restore, setRestore] = useState<boolean>(false);
 
@@ -52,7 +49,7 @@ export const HelpPage: FC<Props> = ({
         <div
           className="button"
           onClick={() => {
-            onClose();
+            navigate('/')
           }}
         >
           <ArrowBackOutline />
@@ -91,7 +88,7 @@ export const HelpPage: FC<Props> = ({
           setRestore(false);
         }}
       >
-        <RestoreDialog reload={() => {reload(); onClose()}} />
+        <RestoreDialog reload={() => {navigate('/')}} />
       </Modal>
     </>
   );

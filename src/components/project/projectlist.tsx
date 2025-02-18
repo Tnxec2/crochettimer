@@ -1,5 +1,5 @@
-import { FC, useMemo, useState } from "react";
-import { CrochetProject, Stores, addData, deleteData } from "../../service/db";
+import { FC, useCallback, useEffect, useState } from "react";
+import { CrochetProject, Stores, addData, deleteData, getStoreData } from "../../service/db";
 import { HeavyPlusSign } from "../icons/plus";
 import { ProjectCard } from "./project.card";
 import Modal from "../modal/modal";
@@ -8,30 +8,39 @@ import { EditProjectDialog } from "./editProjectDialog";
 import { ThemeToggle } from "../ui/theme.toggle";
 import { Archive } from "../icons/archive";
 import { Help } from "../icons/help";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   showArchived: boolean,
   toggleArchived: () => void,
-  projects: CrochetProject[];
-  onOpenProject: (p: CrochetProject | null) => void;
-  onUpdateProject: (p: CrochetProject, reopen: boolean) => void;
   setError: (e: string) => void;
-  reload: () => void;
-  openHelpPage: () => void;
 };
 
 export const ProjectList: FC<Props> = ({
   showArchived,
   toggleArchived,
-  projects,
-  onOpenProject,
-  onUpdateProject,
-  reload,
-  setError,
-  openHelpPage
+  setError
 }) => {
 
-  const filteredProjects = projects.filter((p) => showArchived === p.archived )
+  const navigate = useNavigate();
+
+
+  const [projects, setProjects] = useState<CrochetProject[] | []>([]);
+  const [filteredProjects, setFilteredProjects] = useState<CrochetProject[] | []>([]);
+
+  const handleGetProjects = useCallback( async () => {
+    console.log('handleGetProjects');
+    
+    getStoreData<CrochetProject>(Stores.Projects)
+      .then((data) => {
+        setProjects(data)
+        setFilteredProjects(data.filter((p) => showArchived === p.archived ))
+  }) }, [showArchived]) 
+
+  useEffect(() => {
+    handleGetProjects()
+  }, [handleGetProjects, showArchived])
+
 
   const [openAddProject, setOpenAddProject] = useState<boolean>(false);
 
@@ -74,7 +83,7 @@ export const ProjectList: FC<Props> = ({
     try {
       const res = await addData(Stores.Projects, newProject);
       // refetch data after creating data
-      reload();
+      handleGetProjects();
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -115,16 +124,15 @@ export const ProjectList: FC<Props> = ({
 
     console.log(target, newProject);
 
-    onUpdateProject(newProject, reopen);
+    //onUpdateProject(newProject, reopen);
   };
 
   const handleRemoveProject = async (id: string) => {
     try {
       await deleteData(Stores.Projects, id);
       // refetch data after deleting data
-      reload();
+      handleGetProjects();
       setEditProject(null);
-      onOpenProject(null);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -141,7 +149,7 @@ export const ProjectList: FC<Props> = ({
         <div
           className="button"
           onClick={() => {
-            openHelpPage();
+            navigate('/help')
           }}
         >
           <Help />
@@ -179,7 +187,7 @@ export const ProjectList: FC<Props> = ({
               setEditProject(p);
             }}
             onOpen={() => {
-              onOpenProject(p);
+              navigate(`/${p.id}`)
             }}
           />
         ))}

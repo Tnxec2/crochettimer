@@ -4,15 +4,15 @@ import { Counter } from "../ui/counter";
 
 
 type Props = {
-    part: CrochetPart,
     onUpdate: (part: CrochetPart) => void,
     hasSecondCounter: boolean
+    part?: CrochetPart,
     timer?: ReactNode
 }
 
 export const PartDetails : FC<Props> = ({part, onUpdate, hasSecondCounter, timer}) => {
 
-    return (<div className="">
+    return (<>{ part ? <div className="">
             {timer}
             <div className="card-title p3">{part.name}</div>
             <Counter counter={part.counter} 
@@ -24,5 +24,5 @@ export const PartDetails : FC<Props> = ({part, onUpdate, hasSecondCounter, timer
             updateCounter={(c) => {onUpdate({...part, secondCounter: c})}} 
             isSecond={true}
              /> }
-    </div>)
+    </div> : '' }</>);
 }

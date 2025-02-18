@@ -1,21 +1,37 @@
-import { FC, useEffect, useRef } from "react";
-import { CrochetPart, CrochetProject } from "../../service/db";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CrochetPart, CrochetProject, getById, Stores, updateData } from "../../service/db";
 import { ArrowBackOutline } from "../icons/back";
 import { ProjectDetails } from "./project.details";
 import { Timer } from "../ui/timer";
 import { ThemeToggle } from "../ui/theme.toggle";
+import { useNavigate, useParams } from "react-router-dom";
+import { PartDetails } from "./part.details";
+import { Archive } from "../icons/archive";
 
 
+export const ProjectDetailsContainer : FC = () => {
+  const {id, partid} = useParams();
 
-type Props = {
-    project: CrochetProject
-    onOpenProject: (p: CrochetProject | null) => void
-    onUpdateProject: (project: CrochetProject) => Promise<void>
+  const navigate = useNavigate();
 
-}
-
-export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onUpdateProject}) => {
   const timerRef = useRef<NodeJS.Timeout>(null);
+
+  const [project, setProject] = useState<CrochetProject|null>()
+
+  useEffect(() => {
+    const handleGetProject = (id: string) => {
+      console.log('handleGetProject');
+      
+      getById<CrochetProject>(Stores.Projects, id)
+        .then((data) => setProject(data))
+    };
+    if (id) handleGetProject(id)
+  }, [id])
+
+  const updateProject = useCallback(async (project: CrochetProject) => {
+    updateData(Stores.Projects, project.id, project)
+    .then((data) => setProject(data)) 
+  }, []);
 
   useEffect(() => {
     if (project) {
@@ -27,7 +43,7 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
             time: Math.round((Date.now() - startTime) / 1000) * 1000,
           };
 
-          onUpdateProject(newProject);
+          updateProject(newProject);
         }
       }, 1000);
 
@@ -35,7 +51,7 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
 
       return () => clearInterval(timer);
     }
-  }, [project?.timerOn, project?.time, project, onUpdateProject]);
+  }, [project?.timerOn, project?.time, project, updateProject]);
 
   const handleAddPart = async (project: CrochetProject, partName: string) => {
     const newPart: CrochetPart = {
@@ -49,7 +65,7 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
       parts: project.parts ? [...project.parts, newPart] : [newPart],
     };
 
-    onUpdateProject(newProject);
+    updateProject(newProject);
   };
 
   const handleUpdatePart = async (
@@ -62,7 +78,7 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
         project.parts?.map((p) => (p.id === part.id ? part : p)) || undefined,
     };
 
-    onUpdateProject(newProject);
+    updateProject(newProject);
   };
 
   const handleDeletePart = async (
@@ -75,7 +91,7 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
         project.parts?.filter((p) => p.id !== part.id) || undefined,
     };
 
-    onUpdateProject(newProject);
+    updateProject(newProject);
   };
 
   const onResetTimer = async (project: CrochetProject) => {
@@ -87,7 +103,7 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
       time: 0,
     };
 
-    onUpdateProject(newProject);
+    updateProject(newProject);
   };
 
   const onStartTimer = async (project: CrochetProject) => {
@@ -95,7 +111,7 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
       ...project,
       timerOn: true,
     };
-    onUpdateProject(newProject);
+    updateProject(newProject);
   };
 
   const onStopTimer = async (project: CrochetProject) => {
@@ -106,8 +122,22 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
       timerOn: false,
     };
 
-    onUpdateProject(newProject);
+    updateProject(newProject);
   };
+
+  const timer = useMemo(() => project && project.hasTimer ? <Timer
+  isRunning={project.timerOn}
+  timer={project.time}
+  reset={() => {
+    onResetTimer(project);
+  }}
+  start={() => {
+    onStartTimer(project);
+  }}
+  stop={() => {
+    onStopTimer(project);
+  }}
+/> : '', [project])
 
     return (
 
@@ -115,17 +145,19 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
 <nav>
   <ThemeToggle />
   <div className="app-title">
-    <h1>{project.name}</h1>
+    <h1>{project?.archived && <Archive />} {project?.name}</h1>
   </div>
   <div
     className="button"
     onClick={() => {
-      onOpenProject(null);
+      if (project && partid) navigate(`/${project.id}`)
+      else navigate('/')
     }}
   >
     <ArrowBackOutline />
   </div>
 </nav>
+{ project && !partid &&
 <ProjectDetails
   project={project}
   onAddPart={(name) => {
@@ -138,27 +170,24 @@ export const ProjectDetailsContainer : FC<Props> = ({project, onOpenProject, onU
     handleDeletePart(project, p);
   }}
   onUpdate={async (p) => {
-    onUpdateProject(p);
+    updateProject(p);
   }}
-  timer={
-    <Timer
-      isRunning={project.timerOn}
-      timer={project.time}
-      reset={() => {
-        onResetTimer(project);
-      }}
-      start={() => {
-        onStartTimer(project);
-      }}
-      stop={() => {
-        onStopTimer(project);
-      }}
-    />
-  }
+  timer={timer}
   stopTimer={() => {
     onStopTimer(project);
   }}
 />
+}
+{ project?.parts && partid && 
+  <PartDetails
+      part={project.parts?.find((part) => part.id === partid)}
+      onUpdate={(p) => {
+        navigate(`/${project.id}/${p.id}}`);
+      }}
+      hasSecondCounter={project.hasSecondCounter}
+      timer={timer}
+    />
+}
 </>
 )
 }

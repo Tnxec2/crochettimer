@@ -135,6 +135,25 @@ export const getStoreData = <T>(storeName: Stores): Promise<T[]> => {
   });
 }
 
+export const getById = <T>(storeName: Stores, key: string): Promise<T|null> => {
+  return new Promise((resolve) => {
+    request = indexedDB.open(dbName, version);
+
+    request.onsuccess = () => {
+      db = request.result;
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const res = store.get(key);
+      res.onsuccess = () => {
+        resolve(res.result);
+      };
+      res.onerror = () => {
+        resolve(null);
+      }
+    };
+  });
+}
+
 export const deleteData = (storeName: string, key: string): Promise<boolean> => {
   return new Promise((resolve) => {
     // again open the connection
@@ -158,7 +177,7 @@ export const deleteData = (storeName: string, key: string): Promise<boolean> => 
   });
 };
 
-export const updateData = <T>(storeName: string, key: string, data: T): Promise<T|string|null> => {
+export const updateData = <T>(storeName: string, key: string, data: T): Promise<T|null> => {
   return new Promise((resolve) => {
     console.log('update data');
     

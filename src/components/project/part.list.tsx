@@ -1,13 +1,14 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { CrochetPart, CrochetProject } from "../../service/db";
 import { PartCard } from "./part.card";
 import { millisecondsToHuman } from "../../service/time";
 import { InputDialog } from "../ui/inputNameDialog";
 import Modal from "../modal/modal";
 import { PartDetails } from "./part.details";
+import { useNavigate, useParams } from "react-router-dom";
 
 type Props = {
-  project: CrochetProject;
+  project: CrochetProject,
   timer: ReactNode;
   onAddPart: (name: string) => void;
   onUpdatePart: (part: CrochetPart) => void;
@@ -24,7 +25,10 @@ export const PartList: FC<Props> = ({
   stopTimer,
 }) => {
   const [openNewPartNameDialog, setOpenNewPartNameDialog] = useState(false);
-  const [openPart, setOpenPart] = useState<CrochetPart | null>(null);
+
+
+  const navigate = useNavigate();
+  
 
   return (
     <>
@@ -42,7 +46,7 @@ export const PartList: FC<Props> = ({
           timer={project.hasTimer && timer}
           stopTimer={stopTimer}
           onDeletePart={onDeletePart}
-          openPart={setOpenPart}
+          openPart={(p) => navigate(`/${project.id}/${p.id}`)}
         />
       ))}
       <div className="button" onClick={() => setOpenNewPartNameDialog(true)}>
@@ -65,27 +69,6 @@ export const PartList: FC<Props> = ({
           }}
         />
       </Modal>
-
-      {openPart && (
-        <Modal
-          open={openPart !== null}
-          modalLabel={project.name}
-          onClose={() => {
-            if (project.timerOn && window.confirm("stop timer?")) stopTimer();
-            setOpenPart(null);
-          }}
-        >
-          <PartDetails
-            part={openPart}
-            onUpdate={(p) => {
-              onUpdatePart(p);
-              setOpenPart(p);
-            }}
-            hasSecondCounter={project.hasSecondCounter}
-            timer={timer}
-          />
-        </Modal>
-      )}
     </>
   );
 };

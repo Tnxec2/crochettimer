@@ -3,6 +3,7 @@ import { CrochetPart, CrochetProject } from "../../service/db";
 import { Counter } from "../ui/counter";
 
 import { PartList } from "./part.list";
+import { useParams } from "react-router-dom";
 
 type Props = {
   project: CrochetProject;
@@ -23,6 +24,8 @@ export const ProjectDetails: FC<Props> = ({
   onUpdate,
   stopTimer,
 }) => {
+
+
   return (
     <div className="">
       { project.note.length > 0 && <div className="notes">Notes: {project.note.split('\n').map((l) => <>{l}<br /></>)}</div> }
