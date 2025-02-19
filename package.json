@@ -2,7 +2,7 @@
   "name": "crochettimer",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "/crochettimer",
   "dependencies": {
     "react": "^19.0.0",
     "react-css-modules": "^4.7.11",

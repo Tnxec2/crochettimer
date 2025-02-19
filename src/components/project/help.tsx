@@ -1,20 +1,14 @@
 import { FC, useCallback, useState } from "react";
 import Modal from "../modal/modal";
-import { BackupDialog } from "./backup.dialog";
 import { RestoreDialog } from "./restore.dialog";
 import { ThemeToggle } from "../ui/theme.toggle";
 import { ArrowBackOutline } from "../icons/back";
 import { CrochetProject, getStoreData, Stores } from "../../service/db";
 import { useNavigate } from "react-router-dom";
 
-type Props = {
-};
 
-
-
-export const HelpPage: FC<Props> = ({}) => {
+export const HelpPage: FC = () => {
   const navigate = useNavigate();
-  const [backup, setBackup] = useState<boolean>(false);
   const [restore, setRestore] = useState<boolean>(false);
 
   const save = useCallback(async () => {
@@ -32,13 +26,6 @@ export const HelpPage: FC<Props> = ({}) => {
         saveTextToFile(data);
   }, [])
 
-  const handleImport = async (
-
-  ) => {
-
-  };
-
-
   return (
     <>
       <nav>
@@ -49,7 +36,7 @@ export const HelpPage: FC<Props> = ({}) => {
         <div
           className="button"
           onClick={() => {
-            navigate('/')
+            navigate(`/`)
           }}
         >
           <ArrowBackOutline />
@@ -79,8 +66,6 @@ export const HelpPage: FC<Props> = ({}) => {
         Restore backup
       </div>
 
-
-
       <Modal
         open={restore}
         modalLabel="Restore backup"
@@ -88,7 +73,7 @@ export const HelpPage: FC<Props> = ({}) => {
           setRestore(false);
         }}
       >
-        <RestoreDialog reload={() => {navigate('/')}} />
+        <RestoreDialog reload={() => {navigate(`/`)}} />
       </Modal>
     </>
   );

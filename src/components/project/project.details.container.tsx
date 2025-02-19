@@ -150,8 +150,8 @@ export const ProjectDetailsContainer: FC = () => {
         <div
           className="button"
           onClick={() => {
-            if (project && partid) navigate(`/${project.id}`)
-            else navigate('/')
+            if (project && partid) navigate(`/project/${project.id}`)
+            else navigate(`/`)
           }}
         >
           <ArrowBackOutline />
@@ -182,7 +182,7 @@ export const ProjectDetailsContainer: FC = () => {
         <PartDetails
           part={project.parts?.find((part) => part.id === partid)}
           onUpdate={(p) => {
-            navigate(`/${project.id}/${p.id}}`);
+            handleUpdatePart(project, p)
           }}
           hasSecondCounter={project.hasSecondCounter}
           timer={timer}

@@ -150,7 +150,7 @@ export const ProjectList: FC<Props> = ({
         <div
           className="button"
           onClick={() => {
-            navigate('/help')
+            navigate(`/help`)
           }}
         >
           <Help />
@@ -176,7 +176,6 @@ export const ProjectList: FC<Props> = ({
         >
           { !showArchived ? <Archive /> : <ArrowBackOutline />  }
         </div>
-
       </nav>
 
       <div className="card-list">
@@ -188,7 +187,7 @@ export const ProjectList: FC<Props> = ({
               setEditProject(p);
             }}
             onOpen={() => {
-              navigate(`/${p.id}`)
+              navigate(`/project/${p.id}`)
             }}
           />
         ))}

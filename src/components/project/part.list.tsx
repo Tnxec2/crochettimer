@@ -1,11 +1,10 @@
-import { FC, ReactNode, useEffect, useMemo, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { CrochetPart, CrochetProject } from "../../service/db";
 import { PartCard } from "./part.card";
 import { millisecondsToHuman } from "../../service/time";
 import { InputDialog } from "../ui/inputNameDialog";
 import Modal from "../modal/modal";
-import { PartDetails } from "./part.details";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   project: CrochetProject,
@@ -46,7 +45,7 @@ export const PartList: FC<Props> = ({
           timer={project.hasTimer && timer}
           stopTimer={stopTimer}
           onDeletePart={onDeletePart}
-          openPart={(p) => navigate(`/${project.id}/${p.id}`)}
+          openPart={(p) => navigate(`/project/${project.id}/part/${p.id}`)}
         />
       ))}
       <div className="button" onClick={() => setOpenNewPartNameDialog(true)}>
