@@ -1,15 +1,12 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { CrochetProject, Stores, addData, deleteData, getStoreData, updateData } from "../../service/db";
+import { CrochetProject, Stores, getStoreData } from "../../service/db";
 import { HeavyPlusSign } from "../icons/plus";
 import { ProjectCard } from "./project.card";
-import Modal from "../modal/modal";
-import { AddProjectDialog } from "./addProjectDialog";
-import { EditProjectDialog } from "./editProjectDialog";
-import { ThemeToggle } from "../ui/theme.toggle";
 import { Archive } from "../icons/archive";
 import { Help } from "../icons/help";
 import { useNavigate } from "react-router-dom";
 import { ArrowBackOutline } from "../icons/back";
+import { Navigation } from "./navbar";
 
 type Props = {
   showArchived: boolean,
@@ -39,187 +36,59 @@ export const ProjectList: FC<Props> = ({
     handleGetProjects()
   }, [handleGetProjects, showArchived])
 
-
-  const [openAddProject, setOpenAddProject] = useState<boolean>(false);
-
-  const [editProject, setEditProject] = useState<CrochetProject | null>(null);
-
-  const handleAddProject = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const target = e.target as typeof e.target & {
-      name: { value: string };
-      note: { value: string };
-      hasMultipleParts: { checked: boolean };
-      hasTimer: { checked: boolean };
-      hasSecondCounter: { checked: boolean };
-    };
-
-    const name = target.name.value;
-
-    if (name.trim() === "") {
-      alert("Please enter a valid name");
-      return;
-    }
-
-    setOpenAddProject(false);
-
-    const newProject: CrochetProject = {
-      id: Date.now().toString(),
-      name: name,
-      hasMultipleParts: target.hasMultipleParts.checked,
-      hasTimer: target.hasTimer.checked,
-      hasSecondCounter: target.hasSecondCounter.checked,
-      counter: 1,
-      secondCounter: 1,
-      time: 0,
-      timerOn: false,
-      note: target.note.value,
-      archived: false,
-    };
-
-      addData(Stores.Projects, newProject)
-      .then((data) => handleGetProjects())
-      .catch ((err: unknown) => {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Something went wrong");
-        }
-      })
-  };
-
-  const handleUpdateProject = async (
-    project: CrochetProject,
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const target = e.target as typeof e.target & {
-      name: { value: string };
-      note: { value: string };
-      hasMultipleParts: { checked: boolean };
-      hasTimer: { checked: boolean };
-      hasSecondCounter: { checked: boolean };
-      archived: { checked: boolean };
-    };
-
-    setEditProject(null);
-
-    const newProject = {
-      ...project,
-      name: target.name.value,
-      note: target.note.value,
-      hasMultipleParts: target.hasMultipleParts.checked,
-      hasTimer: target.hasTimer.checked,
-      hasSecondCounter: target.hasSecondCounter.checked,
-      archived: target.archived.checked,
-    };
-
-    updateData(Stores.Projects, project.id, newProject)
-      .then((data) => handleGetProjects())
-      .catch((err) => {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Something went wrong deleting the data");
-        }
-      })
-  };
-
-  const handleRemoveProject = async (id: string) => {
-    try {
-      await deleteData(Stores.Projects, id);
-      // refetch data after deleting data
-      handleGetProjects();
-      setEditProject(null);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong deleting the data");
-      }
-    }
-  };
-
   return (
     <>
-      <nav>
-        <ThemeToggle />
+    <Navigation 
+      title={ showArchived ? 'Archived Projects' : 'Projects' }
+      actionsLeft={
         <div
-          className="button"
+          className="btn btn-outline-secondary ms-2"
           onClick={() => {
             navigate(`/help`)
           }}
         >
           <Help />
         </div>
-        <div className="app-title">
-          <h1>{showArchived ? 'Archived Projects' : 'Projects'}</h1>
-        </div>
-        { !showArchived && <>
-
-        <div
-          className="button"
-          onClick={() => {
-            setOpenAddProject(true);
-          }}
-        >
-          <HeavyPlusSign />
-        </div></> }
-        <div
-          className="button"
-          onClick={() => {
-            toggleArchived();
-          }}
-        >
-          { !showArchived ? <Archive /> : <ArrowBackOutline />  }
-        </div>
-      </nav>
-
-      <div className="card-list">
-        {filteredProjects.map((p) => (
+      }
+      actionsRight={
+        <>{ !showArchived && <>
+              <div
+                className="btn btn-outline-secondary"
+                onClick={() => {
+                  navigate(`/project/new`);
+                }}
+              >
+                <HeavyPlusSign />
+              </div></> }
+              <div
+                className="btn btn-outline-secondary ms-2"
+                onClick={() => {
+                  toggleArchived();
+                }}
+              >
+              { !showArchived ? <Archive /> : <ArrowBackOutline />  }
+            </div>
+        </>
+      }    
+    />
+    <div className="card-body">
+      <ul className="list-group">
+        
+        {filteredProjects.length > 0 ? filteredProjects.map((p) => (
           <ProjectCard
             key={p.id}
             item={p}
             onEdit={() => {
-              setEditProject(p);
+              navigate(`/project/${p.id}/edit`)
             }}
             onOpen={() => {
               navigate(`/project/${p.id}`)
             }}
           />
-        ))}
+        )) : <li className="list-group-item">
+          No { showArchived ? 'archived' : '' } projects found. { !showArchived && 'Click the + button to add a new project.' }</li> }
+      </ul>
       </div>
-
-      <Modal
-        open={openAddProject}
-        modalLabel="Add new Project"
-        onClose={() => {
-          setOpenAddProject(false);
-        }}
-      >
-        <AddProjectDialog handleAddProject={handleAddProject} />
-      </Modal>
-
-      {editProject && (
-        <Modal
-          open={editProject !== null}
-          modalLabel="Edit Project"
-          onClose={() => {
-            setEditProject(null);
-          }}
-        >
-          <EditProjectDialog
-            project={editProject}
-            handleUpdate={handleUpdateProject}
-            onDeleteProject={() => {
-              handleRemoveProject(editProject.id);
-            }}
-          />
-        </Modal>
-      )}
     </>
   );
 };

@@ -30,13 +30,14 @@ export const PartList: FC<Props> = ({
   
 
   return (
-    <>
+    <div className="">
       {project.hasTimer && (
-        <div className="counter-title">
+        <div className="alert alert-light d-flex justify-content-between align-items-center">
           Total: {millisecondsToHuman(project.time)}
         </div>
       )}
-      {project.parts?.map((part) => (
+
+      { project.parts?.length && <div className="list-group mb-3"> {project.parts?.map((part) => (
         <PartCard
           key={part.id}
           project={project}
@@ -47,10 +48,10 @@ export const PartList: FC<Props> = ({
           onDeletePart={onDeletePart}
           openPart={(p) => navigate(`/project/${project.id}/part/${p.id}`)}
         />
-      ))}
-      <div className="button" onClick={() => setOpenNewPartNameDialog(true)}>
+      ))} </div>}
+      <button type="button" className="btn btn-outline-success w-100" onClick={() => setOpenNewPartNameDialog(true)}>
         Add part
-      </div>
+      </button>
 
       <Modal
         open={openNewPartNameDialog}
@@ -68,6 +69,6 @@ export const PartList: FC<Props> = ({
           }}
         />
       </Modal>
-    </>
+    </div>
   );
 };

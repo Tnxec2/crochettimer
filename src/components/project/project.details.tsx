@@ -28,7 +28,8 @@ export const ProjectDetails: FC<Props> = ({
 
   return (
     <div className="">
-      { project.note.length > 0 && <div className="notes">Notes: {project.note.split('\n').map((l) => <>{l}<br /></>)}</div> }
+      { project.note.length > 0 && <div className="alert alert-info">
+        Notes: {project.note.split('\n').map((l) => <>{l}<br /></>)}</div> }
       {project.hasMultipleParts ? (
         <PartList
           project={project}

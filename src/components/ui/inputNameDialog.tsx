@@ -21,8 +21,8 @@ export const InputDialog : FC<Props> = ({defaultValue, placeholder, save}) => {
 
     return (<>
         <form onSubmit={(handleAddProject)}>
-        <input type="text" name="text" placeholder={placeholder} defaultValue={defaultValue} autoFocus/>
-        <button type="submit" className="button">Save</button>
+        <input type="text" className="form-control mb-3" name="text" placeholder={placeholder} defaultValue={defaultValue} autoFocus/>
+        <button type="submit" className="btn btn-primary">Save</button>
       </form>
     </>)
 }

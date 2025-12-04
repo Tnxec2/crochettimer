@@ -34,17 +34,15 @@ export const RestoreDialog: FC<Props> = ({ reload }) => {
 
     return (<>
         <p>Select JSON backup file to restore</p>
-        <div className="" style={{display: 'flex'}}>
+        <div className="d-flex">
         <input
             type="file"
-            style={{flex: 1}}
+            className="form-control"
             accept="application/json"
             id="jsonLoad"
             onChange={uploadJsonFile}
             title="Select JSON backup file to restore"
-        // onClick={onClick} // triger reopen same file
         />
-
         </div>
     </>)
 }

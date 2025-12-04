@@ -6,6 +6,7 @@ const LIGHT = 'theme-light'
 export function setTheme(themeName: string) {
     localStorage.setItem(KEY, themeName);
     document.documentElement.className = themeName;
+    document.documentElement.setAttribute('data-bs-theme', themeName.split('-')[1] || themeName);
 }
 
 export function keepTheme() {

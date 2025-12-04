@@ -15,45 +15,53 @@ type Props = {
 
 export const Counter: FC<Props> = ({ counter, updateCounter, isSecond }) => {
   return (
-    <div className={`counter prevent-select ${isSecond ? "second" : "main"}`}>
-      <div
-        className="button"
-        onClick={(e) => {
-          e.preventDefault();
-          if (window.confirm("Would you reset this counter")) updateCounter(1);
-        }}
-      >
-        <TimerReset />
+    <div className={`alert d-flex align-items-center justify-content-between prevent-select ${isSecond ? "alert-light" : "alert-primary"}`}>
+      <div>
+        <button
+          type="button"
+          className="btn btn-outline-secondary prevent-select me-3"
+          onClick={(e) => {
+            e.preventDefault();
+            if (window.confirm("Would you reset this counter")) updateCounter(1);
+          }}
+        >
+          <TimerReset />
+        </button>
+        <button
+          type="button"
+          className="btn btn-outline-secondary prevent-select"
+          onClick={(e) => {
+            e.preventDefault();
+            if (counter > 1) updateCounter(counter - 1);
+          }}
+        >
+          <Minus />
+        </button>
       </div>
-      <div
-        className="button prevent-select"
-        onClick={(e) => {
-          e.preventDefault();
-          if (counter > 1) updateCounter(counter - 1);
-        }}
-      >
-        <Minus />
-      </div>
-      <div className="counter-title">{counter}</div>
+      <h2>{counter}</h2>
+      <div> 
       {isSecond && (
-        <div
-          className="button prevent-select"
+        <button
+          type="button"
+          className="btn btn-outline-secondary prevent-select me-3"
           onClick={(e) => {
             e.preventDefault();
             updateCounter(counter + 10);
           }}
         >
           <HeavyPlusSign /> 10
-        </div>
+        </button>
       )}
-      <div
-        className={`button prevent-select ${isSecond ? '' : 'big'}`}
+      <button
+        type="button"
+        className={`btn btn-outline-secondary prevent-select ${isSecond ? '' : 'btn-lg'}`}
         onClick={(e) => {
           e.preventDefault();
           updateCounter(counter + 1);
         }}
       >
         <HeavyPlusSign />
+      </button>
       </div>
     </div>
   );

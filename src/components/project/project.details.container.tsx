@@ -7,26 +7,37 @@ import { ThemeToggle } from "../ui/theme.toggle";
 import { useNavigate, useParams } from "react-router-dom";
 import { PartDetails } from "./part.details";
 import { Archive } from "../icons/archive";
+import { Navigation } from "./navbar";
 
+type Props = {
+  setError: (e: string) => void;
+}
 
-export const ProjectDetailsContainer: FC = () => {
+export const ProjectDetailsContainer: FC<Props> = ({ setError }) => {
+
   const { id, partid } = useParams();
+
+  const [project, setProject] = useState<CrochetProject | null>();
+
+  useEffect(() => {
+    if (id) {
+      getById<CrochetProject>(Stores.Projects, id)
+        .then((data) => {
+          setProject(data)
+        })
+        .catch((err) => {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Something went wrong fetching the data");
+          }
+        })
+    }
+  }, [id]);
 
   const navigate = useNavigate();
 
   const timerRef = useRef<NodeJS.Timeout>(null);
-
-  const [project, setProject] = useState<CrochetProject | null>()
-
-  useEffect(() => {
-    const handleGetProject = (id: string) => {
-      console.log('handleGetProject');
-
-      getById<CrochetProject>(Stores.Projects, id)
-        .then((data) => setProject(data))
-    };
-    if (id) handleGetProject(id)
-  }, [id])
 
   const updateProject = useCallback(async (project: CrochetProject) => {
     updateData(Stores.Projects, project.id, project)
@@ -142,52 +153,50 @@ export const ProjectDetailsContainer: FC = () => {
   return (
 
     <>
-      <nav>
-        <ThemeToggle />
-        <div className="app-title">
-          <h1>{project?.archived && <Archive />} {project?.name}</h1>
-        </div>
-        <div
-          className="button"
-          onClick={() => {
+      <Navigation
+        title={<> Project: {project?.name} { project?.archived && <Archive />} </>}
+        actionsRight={
+          <div className="btn btn-outline-secondary" onClick={() => {
             if (project && partid) navigate(`/project/${project.id}`)
             else navigate(`/`)
-          }}
-        >
-          <ArrowBackOutline />
-        </div>
-      </nav>
-      {project && !partid &&
-        <ProjectDetails
-          project={project}
-          onAddPart={(name) => {
-            handleAddPart(project, name);
-          }}
-          onUpdatePart={(p) => {
-            handleUpdatePart(project, p);
-          }}
-          onDeletePart={(p) => {
-            handleDeletePart(project, p);
-          }}
-          onUpdate={async (p) => {
-            updateProject(p);
-          }}
-          timer={timer}
-          stopTimer={() => {
-            onStopTimer(project);
-          }}
-        />
-      }
-      {project?.parts && partid &&
-        <PartDetails
-          part={project.parts?.find((part) => part.id === partid)}
-          onUpdate={(p) => {
-            handleUpdatePart(project, p)
-          }}
-          hasSecondCounter={project.hasSecondCounter}
-          timer={timer}
-        />
-      }
+          }}>
+            <ArrowBackOutline />
+          </div>
+        }
+      />
+      <div className="card-body">
+        {project && !partid &&
+          <ProjectDetails
+            project={project}
+            onAddPart={(name) => {
+              handleAddPart(project, name);
+            }}
+            onUpdatePart={(p) => {
+              handleUpdatePart(project, p);
+            }}
+            onDeletePart={(p) => {
+              handleDeletePart(project, p);
+            }}
+            onUpdate={async (p) => {
+              updateProject(p);
+            }}
+            timer={timer}
+            stopTimer={() => {
+              onStopTimer(project);
+            }}
+          />
+        }
+        {project?.parts && partid &&
+          <PartDetails
+            part={project.parts?.find((part) => part.id === partid)}
+            onUpdate={(p) => {
+              handleUpdatePart(project, p)
+            }}
+            hasSecondCounter={project.hasSecondCounter}
+            timer={timer}
+          />
+        }
+      </div>
     </>
   )
 }

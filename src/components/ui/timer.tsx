@@ -20,23 +20,22 @@ type Props = {
 export const Timer : FC<Props> = ({timer, isRunning, stop, start, reset}) => {
     const prettyTime = millisecondsToHuman(timer)
 
-    return (<div className="timer prevent-select">
-                <div className="button" onClick={(e) => {
+    return (<div className="alert alert-light d-flex align-items-center justify-content-between prevent-select">
+                <button type="button" className="btn btn-outline-secondary" onClick={(e) => {
                     e.preventDefault();
                     if (window.confirm('Would you reset timer')) reset()
                 }}>
             <TimerReset />
-        </div>
+        </button>
 
         <div className="timer-title">{prettyTime}</div>
         { isRunning ?
-        <div className="button prevent-select stop" onClick={(e) => {e.preventDefault(); stop() }}>
+        <button type="button" className="btn btn-outline-danger prevent-select" onClick={(e) => {e.preventDefault(); stop() }}>
             <StopFill />
-        </div> :
-        <div className="button prevent-select start" onClick={(e) => {e.preventDefault(); start()}}>
+        </button> :
+        <button type="button" className="btn btn-outline-success prevent-select" onClick={(e) => {e.preventDefault(); start()}}>
             <Play />
-        </div>
+        </button>
         }
-
     </div>)
 }

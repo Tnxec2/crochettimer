@@ -10,9 +10,9 @@ type Props = {
 export const BackupDialog : FC<Props> = ({}) => {
 
     return (<>
-    <FileLoaderComponent 
-        onClose={() => {}}
-        onLoad={(f) => {}}
-    />
+        <FileLoaderComponent 
+            onClose={() => {}}
+            onLoad={(f) => {}}
+        />
     </>)
 }

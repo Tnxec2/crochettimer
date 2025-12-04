@@ -22,6 +22,7 @@ export const FileLoaderComponent: FC<PROPS> = ({ onLoad, onClose }) => {
             <p>Select json file.</p>
             <input
                 type="file"
+                className='form-control'
                 accept="application/json"
                 onChange={loadFileInput}
                 onAbort={onClose}

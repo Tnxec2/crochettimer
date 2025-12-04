@@ -12,9 +12,23 @@ type Props = {
 
 export const ProjectCard : FC<Props> = ({item, onEdit, onOpen}) => {
 
-    return <div className="list-item" >
-        <div className="card-title" title={item.note ? `${item.name}\n\n${item.note}` : item.name} onClick={onOpen}>{item.name}</div>
-        { item.hasMultipleParts && item.parts && <div className="p3">{item.parts?.length}</div> }
-        <div className="button" onClick={onEdit}><More /></div>
+    return <div className="list-group-item list-group-item-action d-flex align-items-center"  onClick={onOpen}
+        title={item.note ? `${item.name}\n\n${item.note}` : item.name}
+    >
+        <div className="" >
+                {item.name}
+        </div>
+
+        <div className="ms-auto">
+            { item.hasMultipleParts && item.parts && <div className="ms-auto badge text-bg-secondary" title="parts">
+                {item.parts?.length}
+            </div> }
+            <button className="btn btn-outline-secondary ms-3"  onClick={(e) => {
+                e.stopPropagation();
+                onEdit();
+            }}>
+                <More />
+            </button>
+        </div>
     </div>
 }
